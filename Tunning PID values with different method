@@ -1,0 +1,18 @@
+
+% Tunes the PID values of a control system using the Ziegler-Nichols method
+% sys: the control system to be tuned (in transfer function form)
+  sys = tf([1], [1, 1]);
+  function [Kp, Ki, Kd] = tunePID(sys)
+% Step response of the system
+  [y, t] = step(sys);
+
+% Calculate the ultimate gain and period
+  Ku = max(y);
+  Pu = t(find(y > 0.9*Ku, 1));
+
+% Calculate the PID values
+  Kp = 0.6*Ku;
+  Ki = 2*Kp/Pu;
+  Kd = Kp*Pu/8;
+
+  end
