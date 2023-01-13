@@ -1,0 +1,24 @@
+
+% Tunes the PID values of a control system using the Cohen-Coon method
+% sys: the control system to be tuned (in transfer function form)
+  sys = tf([1], [1, 1]);
+  function [Kp, Ki, Kd] = tunePID_CohenCoon(sys)
+% Step response of the system
+  [y, t] = step(sys);
+
+  % Calculate the ultimate gain and period
+  Ku = max(y);
+  Pu = t(find(y > 0.9*Ku, 1));
+
+% Process deadtime
+  tau = find(y>0, 1)*0.02;
+
+% Process gain
+  K = Ku/2;
+
+% Calculate the PID values
+  Kp = 0.9*K/tau;
+  Ki = 1.2*Kp/Pu;
+  Kd = 0.075*Kp*tau;
+
+  end
